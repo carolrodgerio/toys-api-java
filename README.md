@@ -43,9 +43,9 @@ spring.jpa.show-sql=true
 ```
 
 **Evidência**:
-```markdown
-//
-```
+
+![Print do Spring Initializr com dependências](https://github.com/lucasthalless/toys-api-java/blob/main/assets/spring-initializr.png)
+
 
 ## Estrutura do Projeto
 A arquitetura segue o padrão MVC com as camadas:
@@ -79,9 +79,10 @@ A API opera em `http://localhost:8080/brinquedos` (local) ou na URL de deploy. A
   ]
   ```
 - **Evidência**:
-  ```markdown
-  //
-  ```
+
+  ![Print do GET /brinquedos no Chrome](https://github.com/lucasthalless/toys-api-java/blob/main/assets/get.png)
+  ![Print do banco ORACLE com a persistência dos dados](https://github.com/lucasthalless/toys-api-java/blob/main/assets/select-all-database.png)
+
 
 ### 2. GET /brinquedos/{id} (Buscar por ID)
 - **Descrição**: Retorna um brinquedo específico com links HATEOAS.
@@ -101,9 +102,8 @@ A API opera em `http://localhost:8080/brinquedos` (local) ou na URL de deploy. A
   }
   ```
 - **Evidência**:
-  ```markdown
-  //
-  ```
+  ![Print do GET /brinquedos/1 no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/get-by-id.png)
+
 
 ### 3. POST /brinquedos (Criar)
 - **Descrição**: Cria um novo brinquedo, adicionando à lista temporária (se aplicável) e persistindo no banco.
@@ -132,9 +132,8 @@ A API opera em `http://localhost:8080/brinquedos` (local) ou na URL de deploy. A
   }
   ```
 - **Evidência**:
-  ```markdown
-  //
-  ```
+  ![Print do POST /brinquedos no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/post.png)
+
 
 ### 4. PUT /brinquedos/{id} (Atualizar Completo)
 - **Descrição**: Atualiza todos os campos de um brinquedo existente.
@@ -163,9 +162,8 @@ A API opera em `http://localhost:8080/brinquedos` (local) ou na URL de deploy. A
   }
   ```
 - **Evidência**:
-  ```markdown
-  //
-  ```
+  ![Print do PUT /brinquedos/1 no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/put.png)
+
 
 ### 5. PATCH /brinquedos/{id} (Atualizar Parcial)
 - **Descrição**: Atualiza apenas os campos fornecidos de um brinquedo.
@@ -190,17 +188,16 @@ A API opera em `http://localhost:8080/brinquedos` (local) ou na URL de deploy. A
   }
   ```
 - **Evidência**:
-  ```markdown
-  //
-  ```
+  ![Print do PATCH /brinquedos/1 no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/patch.png)
+
 
 ### 6. DELETE /brinquedos/{id} (Excluir)
 - **Descrição**: Exclui um brinquedo por ID, com commit no banco.
 - **Exemplo de Resposta**: Status 204 No Content (sem corpo).
 - **Evidência**:
-  ```markdown
-  //
-  ```
+  ![Print do DELETE /brinquedos/1 no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/delete.png)
+  ![Print do banco atualizado](https://github.com/lucasthalless/toys-api-java/blob/main/assets/updated-database.png)
+
 
 ## Uso de Lombok
 - A anotação `@Data` foi usada na classe `Brinquedo` para gerar automaticamente getters, setters, `toString`, `equals`, e `hashCode`, reduzindo código boilerplate e mantendo a entidade limpa.
@@ -213,12 +210,12 @@ A API opera em `http://localhost:8080/brinquedos` (local) ou na URL de deploy. A
 - A persistência foi configurada via `application.properties` e usa Spring Data JPA para commits no banco.
 
 ## Deploy
-O projeto foi implantado na plataforma **Render**. A URL de acesso é:
-- **[Link do Deploy](#)**
+O projeto foi implantado na plataforma **Render**, utilizando Dockerfile e variaveis de ambiente para conectar ao banco. A URL de acesso é:
+- **[Link do Deploy](https://toys-api-livh.onrender.com/brinquedos)**
 
 ## Instruções de Uso
-1. Clone o repositório: `git clone [link-do-repositorio]`.
-2. Configure o Oracle com a tabela `TDS_TB_Brinquedos`.
+1. Clone o repositório: `git clone https://github.com/lucasthalless/toys-api-java`.
+2. Configure o Oracle com a tabela `TDS_TB_BRINQUEDOS`.
 4. Rode o projeto: `./mvnw spring-boot:run` ou via IntelliJ.
 5. Teste os endpoints em `http://localhost:8080/brinquedos` com Postman/Insomnia.
 
