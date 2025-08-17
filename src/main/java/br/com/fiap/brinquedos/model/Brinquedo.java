@@ -8,7 +8,8 @@ import lombok.Data;
 @Data
 public class Brinquedo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "brinquedo_seq")
+    @SequenceGenerator(name = "brinquedo_seq", sequenceName = "TDS_TB_BRINQUEDOS_SEQ", allocationSize = 1)
     private Long id;
 
     private String nome;
