@@ -68,6 +68,10 @@ public class BrinquedoController {
         if (existing.isPresent()) {
             Brinquedo brinquedo = existing.get();
             if (partial.getNome() != null) brinquedo.setNome(partial.getNome());
+            if (partial.getTipo() != null) brinquedo.setTipo(partial.getTipo());
+            if (partial.getClassificacao() != null) brinquedo.setClassificacao(partial.getClassificacao());
+            if (partial.getTamanho() != null) brinquedo.setTamanho(partial.getTamanho());
+            if (partial.getPreco() != null) brinquedo.setPreco(partial.getPreco());
 
             Brinquedo saved = repository.save(brinquedo);
             EntityModel<Brinquedo> model = EntityModel.of(saved,
