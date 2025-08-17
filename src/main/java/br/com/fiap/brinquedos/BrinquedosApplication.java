@@ -1,13 +1,13 @@
-package br.com.fiap.brinquedosesportivos;
+package br.com.fiap.brinquedos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BrinquedosEsportivosApplication {
+public class BrinquedosApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BrinquedosEsportivosApplication.class, args);
+		SpringApplication.run(BrinquedosApplication.class, args);
 	}
 
 }
