@@ -106,7 +106,7 @@ A API opera em `http://localhost:8080/brinquedos` (local) ou na URL de deploy. A
 
 
 ### 3. POST /brinquedos (Criar)
-- **Descrição**: Cria um novo brinquedo, adicionando à lista temporária (se aplicável) e persistindo no banco.
+- **Descrição**: Cria um novo brinquedo e persiste no banco.
 - **Exemplo de Requisição**:
   ```json
   {
@@ -219,5 +219,5 @@ O projeto foi implantado na plataforma **Render**, utilizando Dockerfile e varia
 4. Rode o projeto: `./mvnw spring-boot:run` ou via IntelliJ.
 5. Teste os endpoints em `http://localhost:8080/brinquedos` com Postman/Insomnia.
 
-## IDE utilizado paraelaboração do projeto
+## IDE utilizado para elaboração do projeto
 - IntelliJ
