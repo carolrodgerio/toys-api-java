@@ -4,7 +4,7 @@
 
 Este projeto consiste em uma API RESTful para gerenciamento de brinquedos, desenvolvida em **Java 17** com o framework **Spring Boot**.
 
-[cite_start]Como parte do 1º Checkpoint da disciplina de **DevOps Tools & Cloud Computing** da FIAP, o projeto foi totalmente migrado de uma arquitetura tradicional para uma arquitetura de contêineres gerenciada pelo **Docker Compose**. [cite: 5]
+Como parte do 1º Checkpoint da disciplina de **DevOps Tools & Cloud Computing** da FIAP, o projeto foi totalmente migrado de uma arquitetura tradicional para uma arquitetura de contêineres gerenciada pelo **Docker Compose**.
 
 ## Arquitetura da Solução
 
@@ -15,8 +15,8 @@ A aplicação é orquestrada pelo Docker Compose e consiste em dois serviços pr
 
 **Recursos Adicionais:**
 
-* [cite_start]**Rede Dedicada (`toys-net`):** Uma rede do tipo *bridge* foi configurada para permitir a comunicação segura e eficiente entre a aplicação e o banco de dados. [cite: 50]
-* [cite_start]**Volume Persistente (`db-data`):** Um volume Docker foi implementado para garantir que os dados do PostgreSQL não sejam perdidos ao recriar o contêiner do banco. [cite: 50]
+* **Rede Dedicada (`toys-net`):** Uma rede do tipo *bridge* foi configurada para permitir a comunicação segura e eficiente entre a aplicação e o banco de dados.
+* **Volume Persistente (`db-data`):** Um volume Docker foi implementado para garantir que os dados do PostgreSQL não sejam perdidos ao recriar o contêiner do banco.
 
 ---
 
@@ -58,7 +58,7 @@ A API estará acessível em: `http://localhost:8080`
 
 ## Comandos Essenciais do Docker Compose
 
-[cite_start]Aqui estão os comandos mais úteis para gerenciar o ciclo de vida da aplicação. [cite: 56]
+Aqui estão os comandos mais úteis para gerenciar o ciclo de vida da aplicação.
 
 * **Subir os serviços em background (modo detached):**
     ```bash
