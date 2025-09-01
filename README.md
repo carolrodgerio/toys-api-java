@@ -36,7 +36,7 @@ Antes de começar, garanta que você tenha os seguintes softwares instalados:
 **1. Clone o Repositório**
 Abra seu terminal e clone este repositório para a sua máquina:
 ```bash
-git clone [https://github.com/lucasthalless/toys-api-java.git](https://github.com/lucasthalless/toys-api-java.git)
+git clone https://github.com/carolrodgerio/toys-api-java
 ```
 
 **2. Navegue até a Pasta do Projeto**
