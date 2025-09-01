@@ -22,8 +22,6 @@ RUN chown appuser:appgroup app.jar
 
 USER appuser
 
-# Expõe a porta 8080, que é a porta padrão do Spring Boot.
 EXPOSE 8080
 
-# Comando para iniciar a aplicação quando o contêiner for executado.
 ENTRYPOINT ["java", "-jar", "app.jar"]
