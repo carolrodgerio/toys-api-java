@@ -1,223 +1,107 @@
-# Projeto API de Brinquedos - FIAP TDS
+# Toys API - Projeto de Containerização com Docker Compose
 
-## Descrição do Projeto
+## Visão Geral
 
-Este projeto é uma API RESTful desenvolvida com o framework **Spring Boot** para gerenciamento de brinquedos infantis (até 12 anos). A API implementa operações CRUD (Create, Read, Update, Delete) com persistência em um banco de dados **Oracle**, utilizando **Spring Data JPA**, **Lombok** para simplificação de código e **HATEOAS** para fornecer links hipermedia (nível 3 de maturidade REST). Os testes foram realizados via **Postman** em `http://localhost:8080/brinquedos`, e o projeto foi implantado em uma plataforma online.
+Este projeto consiste em uma API RESTful para gerenciamento de brinquedos, desenvolvida em **Java 17** com o framework **Spring Boot**.
 
-### Objetivos
-- Criar uma API para gerenciar brinquedos com as colunas: `Id`, `Nome`, `Tipo`, `Classificacao`, `Tamanho`, `Preco`.
-- Implementar endpoints REST com operações CRUD completas.
-- Usar Lombok para reduzir boilerplate na entidade.
-- Aplicar HATEOAS para retornos com links navegáveis.
-- Persistir dados no banco Oracle (tabela `TDS_TB_Brinquedos`) via JPA.
-- Documentar testes com prints e realizar deploy.
+[cite_start]Como parte do 1º Checkpoint da disciplina de **DevOps Tools & Cloud Computing** da FIAP, o projeto foi totalmente migrado de uma arquitetura tradicional para uma arquitetura de contêineres gerenciada pelo **Docker Compose**. [cite: 5]
 
-### Tecnologias Utilizadas
-- **Spring Boot**: Framework principal para a API.
-- **Maven**: Gerenciamento de dependências.
-- **Java 17**: Linguagem de programação.
-- **Spring Data JPA**: Persistência com Oracle.
-- **Lombok**: Anotações para simplificar a entidade (`@Data`).
-- **HATEOAS**: Links hipermedia nas respostas.
-- **Oracle SQL Developer**: Banco de dados (tabela `TDS_TB_Brinquedos`).
-- **Postman**: Testes dos endpoints.
-- **IntelliJ IDEA**: IDE utilizada.
-- **Render**: Plataforma de deploy.
+## Arquitetura da Solução
 
-### Configuração Inicial
-O projeto foi inicializado via **Spring Initializr** com as dependências:
-- Spring Web
-- Spring Data JPA
-- Lombok
-- Spring HATEOAS
-- Oracle JDBC Driver
+A aplicação é orquestrada pelo Docker Compose e consiste em dois serviços principais que operam de forma isolada, mas conectada:
 
-A configuração do banco foi feita em `application.properties`:
-```
-spring.datasource.url=jdbc:oracle:thin:@//oracle.fiap.com.br:1521/ORCL
-spring.datasource.username=
-spring.datasource.password=
-spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
-spring.jpa.hibernate.ddl-auto=validate
-spring.jpa.show-sql=true
+* `app`: Um contêiner responsável por executar a aplicação Java/Spring Boot, construído a partir de um `Dockerfile` customizado.
+* `db`: Um contêiner executando uma instância do banco de dados **PostgreSQL 13**, utilizando uma imagem oficial.
+
+**Recursos Adicionais:**
+
+* [cite_start]**Rede Dedicada (`toys-net`):** Uma rede do tipo *bridge* foi configurada para permitir a comunicação segura e eficiente entre a aplicação e o banco de dados. [cite: 50]
+* [cite_start]**Volume Persistente (`db-data`):** Um volume Docker foi implementado para garantir que os dados do PostgreSQL não sejam perdidos ao recriar o contêiner do banco. [cite: 50]
+
+---
+
+## Pré-requisitos
+
+Antes de começar, garanta que você tenha os seguintes softwares instalados:
+
+* [Docker](https://www.docker.com/products/docker-desktop/)
+* Docker Compose (geralmente já incluído no Docker Desktop)
+
+---
+
+## Processo de Deploy (Passo a Passo)
+
+[cite_start]Siga as instruções abaixo para executar o projeto em seu ambiente local. [cite: 56]
+
+**1. Clone o Repositório**
+Abra seu terminal e clone este repositório para a sua máquina:
+```bash
+git clone [https://github.com/lucasthalless/toys-api-java.git](https://github.com/lucasthalless/toys-api-java.git)
 ```
 
-**Evidência**:
+**2. Navegue até a Pasta do Projeto**
+```bash
+cd toys-api-java
+```
 
-![Print do Spring Initializr com dependências](https://github.com/lucasthalless/toys-api-java/blob/main/assets/spring-initializr.png)
+**3. Execute o Docker Compose**
+Este é o comando principal. Ele irá construir a imagem da aplicação (se ainda não existir), baixar a imagem do PostgreSQL e iniciar os dois contêineres.
+```bash
+docker compose up --build
+```
 
+Após a execução, os logs dos dois serviços serão exibidos no terminal. A API estará pronta para receber requisições quando a mensagem `Started BrinquedosApplication` aparecer.
 
-## Estrutura do Projeto
-A arquitetura segue o padrão MVC com as camadas:
-- **Model**: Classe `Brinquedo` anotada com `@Entity` e `@Data` (Lombok) para mapear a tabela `TDS_TB_Brinquedos`.
-- **Repository**: Interface `BrinquedoRepository` extendendo `JpaRepository` para operações CRUD automáticas.
-- **Controller**: Classe `BrinquedoController` com endpoints REST e HATEOAS.
+A API estará acessível em: `http://localhost:8080`
 
-Optamos por usar diretamente o `JpaRepository` no controller para simplificar o código, mantendo todas as funcionalidades de persistência e commit exigidas. O `JpaRepository` é uma interface do Spring Data JPA que fornece métodos prontos para CRUD, abstraindo a interação com o banco Oracle.
+---
 
-## Funcionalidades e Endpoints
+## Comandos Essenciais do Docker Compose
 
-A API opera em `http://localhost:8080/brinquedos` (local) ou na URL de deploy. Abaixo, cada operação CRUD é descrita com exemplos de uso no Postman.
+[cite_start]Aqui estão os comandos mais úteis para gerenciar o ciclo de vida da aplicação. [cite: 56]
 
-### 1. GET /brinquedos (Listar Todos)
-- **Descrição**: Retorna todos os brinquedos cadastrados com links HATEOAS ("self" e "brinquedos").
-- **Exemplo de Resposta**:
-  ```json
-  [
-    {
-      "id": 1,
-      "nome": "Boneca",
-      "tipo": "Boneco",
-      "classificacao": "3+",
-      "tamanho": "Pequeno",
-      "preco": 29.99,
-      "links": [
-        { "rel": "self", "href": "http://localhost:8080/brinquedos/1" },
-        { "rel": "brinquedos", "href": "http://localhost:8080/brinquedos" }
-      ]
-    }
-  ]
-  ```
-- **Evidência**:
+* **Subir os serviços em background (modo detached):**
+    ```bash
+    docker compose up -d
+    ```
 
-  ![Print do GET /brinquedos no Chrome](https://github.com/lucasthalless/toys-api-java/blob/main/assets/get.png)
-  ![Print do banco ORACLE com a persistência dos dados](https://github.com/lucasthalless/toys-api-java/blob/main/assets/select-all-database.png)
+* **Parar e remover todos os contêineres, redes e volumes:**
+    ```bash
+    docker compose down
+    ```
 
+* **Visualizar os logs da aplicação em tempo real:**
+    ```bash
+    docker compose logs -f app
+    ```
 
-### 2. GET /brinquedos/{id} (Buscar por ID)
-- **Descrição**: Retorna um brinquedo específico com links HATEOAS.
-- **Exemplo de Resposta**:
-  ```json
-  {
-    "id": 1,
-    "nome": "Boneca",
-    "tipo": "Boneco",
-    "classificacao": "3+",
-    "tamanho": "Pequeno",
-    "preco": 29.99,
-    "links": [
-      { "rel": "self", "href": "http://localhost:8080/brinquedos/1" },
-      { "rel": "brinquedos", "href": "http://localhost:8080/brinquedos" }
-    ]
-  }
-  ```
-- **Evidência**:
-  ![Print do GET /brinquedos/1 no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/get-by-id.png)
+* **Verificar o status dos contêineres em execução:**
+    ```bash
+    docker compose ps
+    ```
 
+---
 
-### 3. POST /brinquedos (Criar)
-- **Descrição**: Cria um novo brinquedo e persiste no banco.
-- **Exemplo de Requisição**:
-  ```json
-  {
-    "nome": "Boneca",
-    "tipo": "Boneco",
-    "classificacao": "3+",
-    "tamanho": "Pequeno",
-    "preco": 29.99
-  }
-  ```
-- **Exemplo de Resposta** (status 201 Created):
-  ```json
-  {
-    "id": 1,
-    "nome": "Boneca",
-    "tipo": "Boneco",
-    "classificacao": "3+",
-    "tamanho": "Pequeno",
-    "preco": 29.99,
-    "links": [
-      { "rel": "self", "href": "http://localhost:8080/brinquedos/1" }
-    ]
-  }
-  ```
-- **Evidência**:
-  ![Print do POST /brinquedos no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/post.png)
+## Troubleshooting Básico
 
+Encontrou algum problema? [cite_start]Aqui estão algumas soluções para os erros mais comuns. [cite: 56]
 
-### 4. PUT /brinquedos/{id} (Atualizar Completo)
-- **Descrição**: Atualiza todos os campos de um brinquedo existente.
-- **Exemplo de Requisição**:
-  ```json
-  {
-    "nome": "Boneca Nova",
-    "tipo": "Boneco",
-    "classificacao": "5+",
-    "tamanho": "Médio",
-    "preco": 39.99
-  }
-  ```
-- **Exemplo de Resposta**:
-  ```json
-  {
-    "id": 1,
-    "nome": "Boneca Nova",
-    "tipo": "Boneco",
-    "classificacao": "5+",
-    "tamanho": "Médio",
-    "preco": 39.99,
-    "links": [
-      { "rel": "self", "href": "http://localhost:8080/brinquedos/1" }
-    ]
-  }
-  ```
-- **Evidência**:
-  ![Print do PUT /brinquedos/1 no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/put.png)
+* **Erro: `Port is already allocated` ou `Bind for 0.0.0.0:8080 failed`**
+    * **Causa:** Outro serviço em sua máquina já está utilizando a porta 8080.
+    * **Solução:** Pare o outro serviço ou altere a porta no arquivo `docker-compose.yml`. Mude a linha `ports: - "8080:8080"` para, por exemplo, `ports: - "8081:8080"` e acesse a API em `http://localhost:8081`.
 
+* **Erro durante a etapa de `build`**
+    * **Causa:** Pode ser um erro de compilação do Java, uma dependência faltando no `pom.xml` ou um comando incorreto no `Dockerfile`.
+    * **Solução:** Leia atentamente a mensagem de erro no log do build para identificar a causa raiz e corrija o arquivo correspondente.
 
-### 5. PATCH /brinquedos/{id} (Atualizar Parcial)
-- **Descrição**: Atualiza apenas os campos fornecidos de um brinquedo.
-- **Exemplo de Requisição**:
-  ```json
-  {
-    "preco": 49.99
-  }
-  ```
-- **Exemplo de Resposta**:
-  ```json
-  {
-    "id": 1,
-    "nome": "Boneca",
-    "tipo": "Boneco",
-    "classificacao": "3+",
-    "tamanho": "Pequeno",
-    "preco": 49.99,
-    "links": [
-      { "rel": "self", "href": "http://localhost:8080/brinquedos/1" }
-    ]
-  }
-  ```
-- **Evidência**:
-  ![Print do PATCH /brinquedos/1 no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/patch.png)
+* **Aplicação inicia e para imediatamente**
+    * **Causa:** Geralmente, a aplicação não conseguiu se conectar ao banco de dados.
+    * **Solução:** Verifique os logs com `docker compose logs app`. Confirme se as variáveis de ambiente (`SPRING_DATASOURCE_URL`, `...USERNAME`, `...PASSWORD`) no `docker-compose.yml` estão corretas e se o `healthcheck` do banco de dados está funcionando.
 
+---
 
-### 6. DELETE /brinquedos/{id} (Excluir)
-- **Descrição**: Exclui um brinquedo por ID, com commit no banco.
-- **Exemplo de Resposta**: Status 204 No Content (sem corpo).
-- **Evidência**:
-  ![Print do DELETE /brinquedos/1 no Postman](https://github.com/lucasthalless/toys-api-java/blob/main/assets/delete.png)
-  ![Print do banco atualizado](https://github.com/lucasthalless/toys-api-java/blob/main/assets/updated-database.png)
+**Alunos**
 
-
-## Uso de Lombok
-- A anotação `@Data` foi usada na classe `Brinquedo` para gerar automaticamente getters, setters, `toString`, `equals`, e `hashCode`, reduzindo código boilerplate e mantendo a entidade limpa.
-
-## Uso de HATEOAS
-- Implementamos HATEOAS (nível 3 de maturidade) usando `EntityModel` e `WebMvcLinkBuilder`. Cada resposta inclui links "self" (para o recurso atual) e "brinquedos" (para a coleção), permitindo navegação dinâmica pela API.
-
-## Persistência no Banco Oracle
-- A tabela `TDS_TB_Brinquedos` foi criada no Oracle SQL Developer com as colunas especificadas.
-- A persistência foi configurada via `application.properties` e usa Spring Data JPA para commits no banco.
-
-## Deploy
-O projeto foi implantado na plataforma **Render**, utilizando Dockerfile e variaveis de ambiente para conectar ao banco. A URL de acesso é:
-- **[Link do Deploy](https://toys-api-livh.onrender.com/brinquedos)**
-
-## Instruções de Uso
-1. Clone o repositório: `git clone https://github.com/lucasthalless/toys-api-java`.
-2. Configure o Oracle com a tabela `TDS_TB_BRINQUEDOS`.
-4. Rode o projeto: `./mvnw spring-boot:run` ou via IntelliJ.
-5. Teste os endpoints em `http://localhost:8080/brinquedos` com Postman/Insomnia.
-
-## IDE utilizado para elaboração do projeto
-- IntelliJ
+* Carolina Estevam Rodgerio - RM 554975
+* Enrico Andrade D'Amico -  RM 557706
+* Lucas Thalles dos Santos - RM 558886

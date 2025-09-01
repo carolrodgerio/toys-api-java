@@ -48,8 +48,6 @@ services:
 volumes:
   db-data:
 
-# (Requisito) Configuração de Redes
-# Define a rede customizada do tipo 'bridge'.
 networks:
   toys-net:
     driver: bridge
