@@ -1,30 +1,29 @@
-# Usando uma imagem base do Ubuntu para construção
-FROM ubuntu:latest AS build
+FROM maven:3.8.5-openjdk-17 AS build
 
-# Atualizando o repositório e instalando o JDK e Maven
-RUN apt-get update && apt-get install openjdk-17-jdk maven -y
-
-# Definindo o diretório de trabalho para a construção
 WORKDIR /app
 
-# Copiando o arquivo pom.xml e o código-fonte do projeto para o container
 COPY pom.xml .
+
+RUN mvn dependency:go-offline
+
 COPY src ./src
 
-# Executando a construção do Maven, ignorando os testes
 RUN mvn clean install -DskipTests
 
-# Usando uma imagem base mais leve para executar o aplicativo
-FROM openjdk:17-jdk-slim
+FROM openjdk:17-jre-slim
 
-# Expor a porta 8080
-EXPOSE 8080
-
-# Definindo o diretório de trabalho
 WORKDIR /app
 
-# Copiando o arquivo JAR gerado para a imagem final
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+
 COPY --from=build /app/target/brinquedos-esportivos-0.0.1-SNAPSHOT.jar app.jar
 
-# Comando para executar o aplicativo
+RUN chown appuser:appgroup app.jar
+
+USER appuser
+
+# Expõe a porta 8080, que é a porta padrão do Spring Boot.
+EXPOSE 8080
+
+# Comando para iniciar a aplicação quando o contêiner for executado.
 ENTRYPOINT ["java", "-jar", "app.jar"]
